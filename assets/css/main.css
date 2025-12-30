@@ -1,0 +1,117 @@
+*{
+	margin:0;
+	padding:0;
+}
+
+body, html{
+
+}
+body{
+    font-family: 'Poppins', sans-serif !important;
+}
+
+
+/*nav and header*/
+ .tappie-bio-toggle {
+    display: none;
+}
+
+.tappie-bio-full,
+.tappie-bio-less {
+    display: none;
+}
+
+.tappie-bio-toggle:checked ~ .tappie-bio-short {
+    display: none;
+}
+
+.tappie-bio-toggle:checked ~ .tappie-bio-full {
+    display: inline;
+}
+
+.tappie-bio-toggle:checked ~ .tappie-bio-more {
+    display: none;
+}
+
+.tappie-bio-toggle:checked ~ .tappie-bio-less {
+    display: inline;
+}
+.social-item.non-editable .edit-social,
+.social-item.non-editable .delete-social,
+.social-item.non-editable .save-edit,
+.social-item.non-editable .cancel-edit {
+    display: none !important;
+}
+
+ 
+ .tappieloading{
+    color: #111111;
+    top: 50%;
+    display: none;
+    position: absolute;
+    width: 8rem;
+    height: 8rem;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1060;
+}
+.bodyoverlay{
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0px;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1100;
+    display: none; 
+}
+
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 6rem;
+  height: 6rem;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #223ffe;
+  border-color: #223ffe transparent #111111 transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+ 
+
+
+   
+ #tappie-changepassword-link, .tappie_display_none_cl, .tappie_display_none_changepwsub{
+    display: none;
+}
+
+ 
+/*login page*/
+.tappie-loginbtn{
+    color: #fff;
+    border-color: #fff;
+}
+.rightside{
+    right: 25px;
+    left: auto;
+}
+.loginformwrap{
+    background-color: #f7f7fe;
+    padding: 60px 130px;
+    border: solid 1px #e1e1e1;
+    border-radius: 20px;
+    -webkit-border-radius: 20px;
+}
+.tappie-loginscreen{
+    display: none;
+}
+
+ 

@@ -1,0 +1,745 @@
+jQuery(document).ready(function(){
+
+		//jQuery("body").niceScroll();
+
+		jQuery('.signupnow').on('click', function(){
+				jQuery('.tappie-loginscreen').fadeOut('300', function(){
+					jQuery('.tappie-signupscreen').fadeIn(400);
+				});
+				
+				
+		});
+
+
+		jQuery('.loginnow').on('click', function(){
+				
+				jQuery('.tappie-signupscreen').fadeOut('300', function(){
+					jQuery('.tappie-loginscreen').fadeIn(400);
+				});
+				
+				
+		});
+
+
+
+		jQuery('.tappie-open-changepassword').on('click', function(){
+				
+				jQuery('.tappie-signupscreen, .tappie-loginscreen').fadeOut('300', function(){
+					jQuery('.tappie-changepassword-link').fadeIn(400);
+				});
+				
+				
+		});
+
+
+
+
+
+		/*in wordpress*/
+
+		jQuery('.tappie-addprofile').on('click', function(e){
+				jQuery(this).addClass('active');
+				jQuery('.tappie-all-links').slideDown('300');
+				e.preventDefault();
+				
+		});
+
+
+		jQuery('.tappie-close-socials').on('click', function(e){
+				
+				jQuery('.tappie-addprofile').removeClass('active');
+				jQuery('.tappie-all-links').slideUp('300');
+				e.preventDefault();
+				
+		});
+
+
+
+		/*ajax call on direct off*/
+
+		jQuery('.tappie-directoff').on('click', function(e){
+
+				jQuery(this).toggleClass('active');
+
+				$newtext = jQuery(this).data('othertext');
+				$text = jQuery(this).text();
+				jQuery(this).text($newtext);
+				jQuery(this).data('othertext', $text);
+				
+				$classis = 'active';
+				if(jQuery(this).hasClass('active')){
+					jQuery('.userprofile-social').slice(1).hide(300);
+				}else{
+					jQuery('.userprofile-social').show(300);
+					jQuery('.userprofile-social').css({'display':'block'});
+					jQuery('.userprofile-social').removeClass('halfhidden');
+					$classis = '';
+				}
+
+				$fistelem = jQuery('.userprofile-social').first().data('tappie');
+				$fistelemurl = jQuery('.userprofile-social').first().attr('href');
+				$profileun = jQuery('.userprofile-social').first().data('profile-un');
+
+				jQuery('.tappieloading, .bodyoverlay').show();
+
+				/*ajax*/
+				jQuery.ajax({
+				            url : ajaxURL.ajaxurl,
+				            type : 'POST',
+				            dataType: "json",
+				            data : {
+				                action : 'tappie_directbtn_function',
+				                status : $classis,
+				                selected:$fistelem,
+				                profileun:$profileun,
+				                link:$fistelemurl
+				            },
+				            success : function( response ) {
+				                jQuery(console.log(response));
+				                jQuery('.tappieloading, .bodyoverlay').hide();
+				            }
+				        });
+				
+				e.preventDefault();
+				
+		});
+
+
+		/*ajax call on selecting a social*/
+
+		jQuery('a[href="#"]').on('click', function(e){
+			e.preventDefault();
+		});
+
+		jQuery('.tappied-add-social').on('click', function(e){
+
+				$thissocial = jQuery(this).data('social');
+				$title = jQuery(this).data('title');
+				$postid = jQuery(this).data('postid');
+				$baseurl = jQuery(this).data('baseurl');
+				$icon = jQuery(this).data('icon');
+				$placeholder = jQuery(this).data('placeholder');
+
+				jQuery('.tappieloading, .bodyoverlay').show();
+				jQuery('#tappie-social-model').remove();
+				/*ajax*/
+				jQuery.ajax({
+				            url : ajaxURL.ajaxurl,
+				            type : 'POST',
+				            dataType: "json",
+				            data : {
+				                action : 'tappie_this_social_function',
+				                social : $thissocial,
+				                title : $title,
+				                baseurl : $baseurl,
+				                icon : $icon,
+				                placeholder : $placeholder,
+				                postid : $postid
+				            },
+				            success : function( response ) {
+				            	jQuery('.tappie-all-links').append(response.html);
+				            	jQuery('#tappie-social-model').modal('show'); 
+				                jQuery(console.log(response));
+				                jQuery('.tappieloading, .bodyoverlay').hide();
+				            }
+				        });
+				
+				e.preventDefault();
+				
+		});
+
+
+		/*show qr code on ajax*/
+
+		jQuery('a.tappie-headicon, li.tappie-headicon').on('click', function(e){
+				$href = jQuery(this).attr('href');
+				jQuery('#tappie-qrcode .modal-body').html('');
+				jQuery('.tappieloading, .bodyoverlay').show();
+
+
+				jQuery.ajax({
+				            url : ajaxURL.ajaxurl,
+				            type : 'POST',
+				            dataType: "json",
+				            data : {
+				                action : 'tappie_generate_qrcode_profile',
+				            },
+				            success : function( response ) {
+				            	
+				            	$imgTag = jQuery('<img id="dynamic">'); 
+				            	$imgTag.attr('src', response);
+
+				            	$imgTag.appendTo('#tappie-qrcode .modal-body');
+				            	jQuery('#tappie-qrcode').modal('show'); 
+
+				                jQuery(console.log(response));
+				                jQuery('.tappieloading, .bodyoverlay').hide();
+				            }
+				        });
+
+				
+				
+				e.preventDefault();
+				
+		});
+
+
+
+
+		/*ajax call on edit click*/
+
+		jQuery('.tappie-directedit').on('click', function(e){
+
+
+				jQuery('.tappieloading, .bodyoverlay').show();
+				jQuery('.tappie-activesocials').fadeOut(300);
+				jQuery('.tappie-all-links').remove();
+				jQuery('.tappied-editsocials #sortablelist').html('');
+				jQuery(this).addClass('disabled');
+				jQuery('a.tappie-directoff').addClass('disabled');
+
+				/*ajax*/
+				jQuery.ajax({
+				            url : ajaxURL.ajaxurl,
+				            type : 'POST',
+				            dataType: "json",
+				            data : {
+				                action : 'tappie_all_calledit_function',
+				            },
+				            success : function( response ) {
+
+				            	jQuery('.tappied-editsocials #sortablelist').html(response.html);
+				                //jQuery(console.log(response));
+				                jQuery('.tappied-editsocials #sortablelist').after(response.btn);
+				                jQuery('.tappieloading, .bodyoverlay').hide();
+
+				                /*soratble*/
+				                jQuery( "#sortablelist" ).sortable({
+				                	update: function (event, ui) {
+				                	    var datasend = jQuery(this).sortable('serialize');
+				                	    //console.log(datasend);
+				                	    //jQuery('.tappieloading, .bodyoverlay').show();
+
+				                	    // jQuery.ajax({
+				                	    //     type: 'POST',
+				                	    //     dataType: "json",
+				                	    //     url : ajaxURL.ajaxurl,
+
+				                	    //     data : {
+				                	    //         action : 'tappie_save_order_socials_function',
+				                	    //         data: datasend
+				                	    //     },
+				                	    //     success : function( response ) {
+				                	    //     	 console.log(response);
+				                	    //     	 //jQuery('.tappied-editsocials #sortablelist').html(response.html);
+				                	    //     	 jQuery('.tappieloading, .bodyoverlay').hide();
+				                	            
+				                	    //     },
+				                	    //     complete: function(response){
+				                	    //     	console.log('complete');
+				                	    //     	cnt = 1;
+				                	    //     	jQuery('.tappied-editsocials .tappliesort').each(function(i, obj) {
+				                	    //     	    //test
+				                	    //     	    jQuery(this).attr("id","item-"+cnt);
+				                	    //     	    cnt++;
+				                	    //     	});
+				                	    //     	jQuery('.tappieloading, .bodyoverlay').hide();
+				                	    //     }
+
+				                	    // });
+
+
+				                	}
+				                });
+				                
+				            }
+				        });
+				
+				e.preventDefault();
+				
+		});
+
+
+
+		// ajaxon save sorting button
+
+		jQuery(document).on('click', '.tappied-editsocials .bcktohome', function(e){
+			e.preventDefault();
+
+			jQuery('.tappieloading, .bodyoverlay').show();
+
+
+			 var sorting_array = [];
+                    jQuery('#sortablelist div.tappliesort').each(function() {
+                        console.log(jQuery(this).data('keyid'));
+                        sorting_array.push(jQuery(this).data('keyid'));
+                    });
+
+
+
+			jQuery.ajax({
+				                	        type: 'POST',
+				                	        dataType: "json",
+				                	        url : ajaxURL.ajaxurl,
+
+				                	        data : {
+				                	            action : 'tappie_save_order_socials_function',
+				                	            data: sorting_array
+				                	        },
+				                	        success : function( response ) {
+				                	        	 console.log(response);
+				                	        	 //jQuery('.tappied-editsocials #sortablelist').html(response.html);
+				                	        	 jQuery('.tappieloading, .bodyoverlay').hide();
+				                	            
+				                	        },
+				                	        complete: function(response){
+				                	        	
+				                	        	jQuery('.tappieloading, .bodyoverlay').hide();
+				                	        	location.reload();
+
+				                	        }
+
+				                	    });
+
+
+
+		})
+
+		
+
+
+		/*ajax call on user login*/
+
+		jQuery('.tappie-loginscreen').on('submit', function(e){
+
+				jQuery('.tappieloading, .bodyoverlay').show();
+
+				$un = jQuery(this).find('input[name="un"]').val();
+				$up = jQuery(this).find('input[name="up"]').val();
+
+				jQuery(this).find('.alert').html('');
+				jQuery(this).find('.alert').addClass('hiddenbtn');
+				$this = jQuery(this);
+
+				/*ajax*/
+				jQuery.ajax({
+				            url : ajaxURL.ajaxurl,
+				            type : 'POST',
+				            dataType: "json",
+				            data : {
+				                action : 'tappie_login_function',
+				                un : $un,
+				                up : $up
+				            },
+				            success : function( response ) {
+				                jQuery('.tappieloading, .bodyoverlay').hide();
+
+				                if (response.error===true) {
+				                	$this.find('.alert.alert-danger').html(response.msg);
+				                	$this.find('.alert.alert-danger').removeClass('hiddenbtn');
+				                }else{
+				                	$this.find('.alert.alert-success').html(response.msg);
+				                	$this.find('.alert.alert-success').removeClass('hiddenbtn');
+				                	window.location.replace(response.url);
+				                }
+
+				            }
+				        });
+				
+				e.preventDefault();
+				
+		});
+
+
+		
+
+
+		/*ajax call on user resigertaion*/
+
+		jQuery('.tappie-signupscreen').on('submit', function(e){
+
+				jQuery('.tappieloading, .bodyoverlay').show();
+
+				$un = jQuery(this).find('input[name="un"]').val();
+				$up = jQuery(this).find('input[name="up"]').val();
+				$uemail = jQuery(this).find('input[name="uemail"]').val();
+
+				jQuery(this).find('.alert').html('');
+				jQuery(this).find('.alert').addClass('hiddenbtn');
+
+				$this = jQuery(this);
+
+				/*ajax*/
+				jQuery.ajax({
+				            url : ajaxURL.ajaxurl,
+				            type : 'POST',
+				            dataType: "json",
+				            data : {
+				                action : 'wp_ajax_tappie_registeration_function',
+				                un : $un,
+				                uemail : $uemail,
+				                up : $up
+				            },
+				            success : function( response ) {
+				                jQuery('.tappieloading, .bodyoverlay').hide();
+
+				                if (response.error===true) {
+				                	$this.find('.alert.alert-danger').html(response.msg);
+				                	$this.find('.alert.alert-danger').removeClass('hiddenbtn');
+				                }else{
+				                	$this.find('.alert.alert-success').html(response.msg);
+				                	$this.find('.alert.alert-success').removeClass('hiddenbtn');
+				                	window.location.replace(response.url);
+				                }
+
+				            }
+				        });
+				
+				e.preventDefault();
+				
+		});
+
+
+		
+		//image preview on social profile
+		jQuery('#tappie-prifleimg').on('change', function(){
+				//alert();
+				jQuery('.tappieloading, .bodyoverlay').show();
+				input = this;
+				var myFormData = new FormData();
+				myFormData.append('tappie-prifleimg', input.files[0]);
+				myFormData.append('action', 'tappie_update_user_pic');
+
+				/*ajax*/
+				jQuery.ajax({
+				            url : ajaxURL.ajaxurl,
+				            type : 'POST',
+				            dataType: "json",
+				            processData: false,
+				           	contentType: false,
+				            data : myFormData,
+				            success : function( response ) {
+
+				                jQuery('.tappieloading, .bodyoverlay').hide();
+
+				                	if (input.files && input.files[0]) {
+				                        var reader = new FileReader();
+
+				                        reader.onload = function (e) {
+				                            jQuery('#tappie-updateprofile .tappie-round-img img').attr('src', e.target.result);
+				                        }
+
+				                        reader.readAsDataURL(input.files[0]);
+				                    }
+
+				            }
+				        });
+
+				
+		});
+
+
+		/*change profile submit*/
+		jQuery('#tappie-updateprofile, #tappie-changepassword, #tappie-addpasscode').on('submit', function(){
+			jQuery('.tappieloading, .bodyoverlay').show();
+		});
+
+
+
+	
+
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*ajax call on selecting a social*/
+
+		jQuery(document).on('submit','.tappie-add-socialform', function(e){
+
+				$thissocial = jQuery(this).find('input[name="social"]').val();
+				$thissociallink = jQuery(this).find('input[name="social-link"]').val();
+				$social_id = jQuery(this).find('input[name="social_id"]').val();
+				$social_name = jQuery(this).find('input[name="social_name"]').val();
+				$baseurl = jQuery(this).find('input[name="baseurl"]').val();
+
+				jQuery('.tappieloading, .bodyoverlay').show();
+				/*ajax*/
+				jQuery.ajax({
+				            url : ajaxURL.ajaxurl,
+				            type : 'POST',
+				            dataType: "json",
+				            data : {
+				                action : 'tappie_save_this_social_function',
+				                social : $thissocial,
+				                social_id : $social_id,
+				                social_name : $social_name,
+				                baseurl : $baseurl,
+				                sociallink : $thissociallink
+				            },
+				            success : function( response ) {
+				            	
+
+				                jQuery(console.log(response));
+				                jQuery('.tappieloading, .bodyoverlay').hide();
+				                window.location.reload(true);
+				            }
+				        });
+				
+				e.preventDefault();
+				
+		});
+
+
+
+		/*ajax on delte single porfile*/
+
+		jQuery(document).on('click','.tappie-delete-profile', function(e){
+
+				$profileid = jQuery(this).data('profileid');
+				$profilekey = jQuery(this).data('profile-key');
+
+
+				var sorting_array = [];
+                    jQuery('#sortablelist div.tappliesort').each(function() {
+                        console.log(jQuery(this).data('keyid'));
+                        sorting_array.push(jQuery(this).data('keyid'));
+                    });
+
+				
+
+						jQuery('.tappieloading, .bodyoverlay').show();
+						/*ajax*/
+						jQuery.ajax({
+						            url : ajaxURL.ajaxurl,
+						            type : 'POST',
+						            dataType: "json",
+						            data : {
+						                action : 'tappie_delte_this_prifle',
+						                profileid : $profileid,
+						                profilekey : $profilekey,
+						                data : sorting_array
+						                
+						            },
+						            success : function( response ) {
+
+						                jQuery(console.log(response));
+						                jQuery('.tappieloading, .bodyoverlay').hide();
+						                window.location.reload(true);
+						            }
+						        });
+				
+				e.preventDefault();
+				
+		});
+
+
+
+		/*ajax on preview contact*/
+
+		jQuery(document).on('click','.tapp-contact-vcf', function(e){
+
+						jQuery('.tappieloading, .bodyoverlay').show();
+						$uname = jQuery(this).data('userurl');
+						/*ajax*/
+						jQuery.ajax({
+						            url : ajaxURL.ajaxurl,
+						            type : 'POST',
+						            dataType: "json",
+						            data : {
+						                action : 'tappie_vcf_this_profile',
+						                uname : $uname
+
+						            },
+						            success : function( response ) {
+						            	
+						                jQuery(console.log(response));
+						                jQuery('.tappieloading, .bodyoverlay').hide();
+
+						                var userCard = vCard.create(vCard.Version.FOUR)
+
+						                if (response.userfname || response.userlname) {
+						                	userCard.add(vCard.Entry.NAME, response.userfname+";"+response.userlname+";;")
+						                	userCard.add(vCard.Entry.FORMATTEDNAME, response.userfname+' '+response.userlname)
+						                }else{
+						                	userCard.add(vCard.Entry.NAME, response.userlogin+";"+response.userlogin+";;")
+						                	userCard.add(vCard.Entry.FORMATTEDNAME, response.userlogin)
+						                }
+
+			                            userCard.add(vCard.Entry.NICKNAME, response.userlogin)
+			                            if (response.userphone) {
+			                            	userCard.add(vCard.Entry.PHONE, response.userphone, vCard.Type.CELL)
+			                            }
+			                            
+			                            if (response.useremail) {
+			                            	userCard.add(vCard.Entry.EMAIL, response.useremail, vCard.Type.WORK)
+			                            	userCard.add(vCard.Entry.EMAIL, response.useremail, vCard.Type.HOME)
+			                            }
+			                            
+			                            var link = vCard.export(userCard, response.userlogin, true) // use parameter true to force download
+			                            document.body.appendChild(link)
+						            }
+						        });
+				
+				e.preventDefault();
+				
+		});
+
+
+		/*send reset link to user*/
+
+		jQuery(document).on('submit','#tappie-changepassword-link', function(e){
+						$this = jQuery(this);
+						$userlogin = $this.find('input[name=user_login]').val();
+						jQuery('.tappieloading, .bodyoverlay').show();
+						/*ajax*/
+						jQuery.ajax({
+						            url : ajaxURL.ajaxurl,
+						            type : 'POST',
+						            dataType: "json",
+						            data : {
+						                action : 'tappie_send_reset_link',
+						                userlogin : $userlogin,
+						                
+						            },
+						            success : function( response ) {
+
+						                jQuery(console.log(response));
+						                $this.find('.tap-ajax-rsp').html(response.msg);
+						                jQuery('.tappieloading, .bodyoverlay').hide();
+						            }
+						        });
+				
+				e.preventDefault();
+				
+		});
+
+
+
+
+		/*proceed password change*/
+
+		jQuery(document).on('submit','#tappie-setchangepassword', function(e){
+						$this = jQuery(this);
+						$uid = $this.find('input[name=user_id]').val();
+						$pw = $this.find('input[name=user_new_password]').val();
+						jQuery('.tappieloading, .bodyoverlay').show();
+						/*ajax*/
+						jQuery.ajax({
+						            url : ajaxURL.ajaxurl,
+						            type : 'POST',
+						            dataType: "json",
+						            data : {
+						                action : 'tappie_update_password_in_db',
+						                user_id : $uid,
+						                pw : $pw,
+						                
+						            },
+						            success : function( response ) {
+
+						                jQuery(console.log(response));
+						                $this.find('.tap-ajax-rsp').html(response.msg);
+						                jQuery('.tappieloading, .bodyoverlay').hide();
+						            }
+						        });
+				
+				e.preventDefault();
+				
+		});
+
+		/*on click/tap on */
+
+		jQuery(document).on('click','.tappie-add-socialform .form-group input[type=text], .tappie-updateprofile .form-group input[type=text] ', function(e){
+						$this = jQuery(this);
+						jQuery('.tappie-tooltip').removeClass('active');
+						$this.closest('.form-group').find('.tappie-tooltip').addClass('active');
+				
+				e.preventDefault();
+				
+		});
+
+		/*on click other than tap*/
+		jQuery(document).on('click', function (event) {
+			if (!jQuery(event.target).closest('.tappie-tooltip, .tappie-add-socialform .form-group input[type=text], .tappie-updateprofile .form-group input[type=text').length) {
+				$this.closest('.form-group').find('.tappie-tooltip').removeClass('active');
+			}
+		});
+
+	 //////////////////////////////
+	 
+  // Login password toggle
+  const loginPass = document.getElementById('login-password');
+  const toggleLogin = document.getElementById('toggleLoginPassword');
+  if (loginPass && toggleLogin) {
+    loginPass.addEventListener('input', () => toggleLogin.classList.toggle('hidden', loginPass.value === ''));
+    toggleLogin.addEventListener('click', () => {
+      const type = loginPass.type === 'password' ? 'text' : 'password';
+      loginPass.type = type;
+      toggleLogin.querySelector('img').src = type === 'password' 
+        ? '<?php echo get_template_directory_uri(); ?>/img/eye.svg'
+        : '<?php echo get_template_directory_uri(); ?>./img/eye-slash.png';
+    });
+  }
+
+  // Signup password toggle
+  const signupPass = document.getElementById('signup-password');
+  const toggleSignup = document.getElementById('toggleSignupPassword');
+  if (signupPass && toggleSignup) {
+    signupPass.addEventListener('input', () => toggleSignup.classList.toggle('hidden', signupPass.value === ''));
+    toggleSignup.addEventListener('click', () => {
+      const type = signupPass.type === 'password' ? 'text' : 'password';
+      signupPass.type = type;
+      toggleSignup.querySelector('img').src = type === 'password' 
+        ? '<?php echo get_template_directory_uri(); ?>/img/eye.svg'
+        : '<?php echo get_template_directory_uri(); ?>./img/eye-slash.png';
+    });
+  }
+
+  // Confirm password toggle
+  const confirmPass = document.getElementById('confirmPassword');
+  const toggleConfirm = document.getElementById('toggleConfirmPassword');
+  if (confirmPass && toggleConfirm) {
+    confirmPass.addEventListener('input', () => toggleConfirm.classList.toggle('hidden', confirmPass.value === ''));
+    toggleConfirm.addEventListener('click', () => {
+      const type = confirmPass.type === 'password' ? 'text' : 'password';
+      confirmPass.type = type;
+      toggleConfirm.querySelector('img').src = type === 'password' 
+        ? '<?php echo get_template_directory_uri(); ?>/img/eye.svg'
+        : '<?php echo get_template_directory_uri(); ?>./img/eye-slash.png';
+    });
+  }
+
+  // Form switching
+  document.querySelectorAll('.signupnow').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('tappie-loginscreen').classList.add('hidden');
+      document.getElementById('tappie-signupscreen').classList.remove('hidden');
+      document.getElementById('tappie-changepassword-link').classList.add('hidden');
+    });
+  });
+  document.querySelectorAll('.loginnow').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('tappie-signupscreen').classList.add('hidden');
+      document.getElementById('tappie-loginscreen').classList.remove('hidden');
+      document.getElementById('tappie-changepassword-link').classList.add('hidden');
+    });
+  });
+  document.querySelectorAll('.tappie-open-changepassword').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.getElementById('tappie-loginscreen').classList.add('hidden');
+      document.getElementById('tappie-changepassword-link').classList.remove('hidden');
+    });
+  });

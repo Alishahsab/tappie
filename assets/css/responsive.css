@@ -1,0 +1,19 @@
+@media only screen and (max-width: 600px) {
+  
+  .w-75 {
+    width: 100% !important;
+  }
+
+  .loginformwrap{
+      padding: 60px 20px !important;
+  }
+
+  .loginformwrap .alert{
+    font-size: 14px;
+    text-align: left;
+  }
+  .ubcldropdown, #navbarToggleExternalContent{
+    left: 2px !important;
+  }
+
+}
