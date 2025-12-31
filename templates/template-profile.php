@@ -91,7 +91,26 @@ if (isset($_POST['tappie_color'])) {
         delete_user_meta($uid, 'tappie_color');
     }
 }
+// ......
+$uid = get_current_user_id();
+$colorone = get_user_meta($uid, 'tappie_color-one', true);
+$default_colorone = '#FFFFFF'; // default color
+$colorone = !empty($colorone) ? $colorone : $default_colorone;
 
+if (isset($_POST['tappie_color-one'])) {
+    $posted_color = trim($_POST['tappie_color-one']);
+
+    if ($posted_color === '') {
+        delete_user_meta($uid, 'tappie_color-one');
+        $colorone = $default_colorone;
+    } elseif (preg_match('/^#[0-9A-Fa-f]{6}$/', $posted_color)) {
+        update_user_meta($uid, 'tappie_color-one', $posted_color);
+        $colorone = $posted_color;
+    } else {
+        delete_user_meta($uid, 'tappie_color-one');
+        $colorone = $default_colorone;
+    }
+}
 // ......................
 
 
@@ -320,7 +339,7 @@ $colors = get_user_meta($uid, 'tappie_colors', true);
                         <?php if (!empty($tapcode)): ?>
                             <div class="mb-8 flex justify-between items-center p-6 bg-white rounded-[5px]">
                                 <div>
- <label class="block text-sm font-medium text-gray-700 mb-2">Current Tappie Passcode</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Current Tappie Passcode</label>
                                 <p class="text-lg font-mono text-gray-800"><?php echo esc_html(
                                     $tapcode,
                                 ); ?></p>
@@ -506,6 +525,11 @@ $uid = get_current_user_id();
 $color = get_user_meta($uid, 'tappie_color', true);
 $default_color = '#FF8686'; // your default color
 $color = !empty($color) ? $color : $default_color;
+// ............
+$colorone = get_user_meta($uid, 'tappie_color-one', true);
+$default_colorone = '#FFF'; // your default color
+$colorone = !empty($colorone) ? $colorone : $default_colorone;
+
 ?>
 
 <!-- ///////////////// -->
@@ -538,7 +562,38 @@ $color = !empty($color) ? $color : $default_color;
            value="<?php echo esc_attr($color); ?>">
 </div>
 <!-- //////////////////// -->
+<!-- ///////////////// -->
+<div class="mb-8 flex items-center">
+    <label class="block text-sm font-medium w-[40%] text-gray-700 me-3">
+        Public Profile Text Color:
+    </label>
 
+    <div class="relative w-full">
+        <!-- Hidden color picker -->
+        <input type="color" id="hidden-color-picker-one"
+               style="opacity: 0; width: 1px; height: 1px; position: absolute;"
+               value="<?php echo esc_attr($colorone); ?>">
+
+        <!-- Text input -->
+        <input type="text"
+               id="color-text-input-one"
+               class="w-full pl-12 pr-3 py-2 border border-gray-300 rounded-[5px] focus:outline-none focus:ring-2 focus:ring-teal-500"
+               value="<?php echo esc_attr($colorone); ?>"
+               placeholder="#ffffff">
+
+        <!-- Circular swatch -->
+        <span id="color-circle-one"
+              class="absolute left-2 top-1/2 transform -translate-y-1/2 w-8 h-8 rounded-full border cursor-pointer"
+              style="background-color: <?php echo esc_attr($colorone); ?>;">
+        </span>
+    </div>
+
+    <!-- Hidden input for form submission -->
+    <input type="hidden" id="tappie-color-hidden-one"
+           name="tappie_color-one"
+           value="<?php echo esc_attr($colorone); ?>">
+</div>
+<!-- //////////////////// -->
                         <button type="submit" class=" items-center px-5 py-2.5 bg-[#54B7B4]  justify-center text-white text-sm font-medium rounded-[5px] transition shadow-sm">Update Profile</button>
                     </form>
                 </div>

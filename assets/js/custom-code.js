@@ -635,7 +635,45 @@ document.addEventListener('DOMContentLoaded', () => {
 colorCircle.addEventListener('click', () => {
     picker.click(); // now the picker will open
 });
+///////////////////textcolor////////////picker/////
+document.addEventListener('DOMContentLoaded', () => {
+    const picker = document.getElementById('hidden-color-picker-one');
+    const textInput = document.getElementById('color-text-input-one');
+    const circle = document.getElementById('color-circle-one');
+    const hiddenInput = document.getElementById('tappie-color-hidden-one');
 
+    const DEFAULT_COLOR = '#FFFFFF';
+
+    // Apply color to UI
+    function applyColor(color) {
+        circle.style.backgroundColor = color;
+        textInput.value = color;
+        hiddenInput.value = color;
+    }
+
+    // Initialize with saved value or default
+    const savedColor = hiddenInput.value.trim();
+    if (/^#[0-9A-Fa-f]{6}$/.test(savedColor)) {
+        applyColor(savedColor);
+    } else {
+        applyColor(DEFAULT_COLOR);
+    }
+
+    // Click on circle → open picker
+    circle.addEventListener('click', () => picker.click());
+
+    // When color picker changes
+    picker.addEventListener('input', (e) => applyColor(e.target.value));
+
+    // When user types manually
+    textInput.addEventListener('input', (e) => {
+        let val = e.target.value;
+        if (/^#[0-9A-Fa-f]{0,6}$/.test(val)) {
+            circle.style.backgroundColor = val || DEFAULT_COLOR;
+            hiddenInput.value = val;
+        }
+    });
+});
 
 // When color changes
 // colorInput.addEventListener('input', (e) => {
