@@ -42,6 +42,11 @@ $user_email    = $userinfo->user_email ?? '';
 $user_phone    = get_user_meta($userID, 'ext_phone', true);
 $user_profiles = get_user_meta($userID, 'saved_profiles', true);
 $username_link1 = site_url().'/dashboard/?user=' . $userinfo->user_login;
+$color = get_user_meta($userID, 'tappie_color', true);
+//  print_r($color);
+
+
+// exit();
 if (!empty($user_profiles)) {
     ksort($user_profiles);
 }
@@ -77,6 +82,8 @@ if (empty($userimg)) {
     $username_link = site_url().'/dashboard/?user=' . $userinfo->user_login;
     $user_email = $userinfo->user_email ?? '';
     ?>
+  
+
     <section class="bg-white min-h-screen flex relative">
         <!-- Fixed Left Sidebar -->
         <aside id="sidebar"
@@ -108,10 +115,10 @@ if (empty($userimg)) {
                             My Profile
                         </a> -->
                         <nav class="space-y-1">
-                    <a href="<?= esc_url( site_url('/dashboard') ) ?>" class="flex items-center px-4 py-3  text-teal-600 bg-gray-100 hover:bg-gray-100 rounded-lg transition">
+                    <a href="<?= esc_url( site_url('/dashboard') ) ?>" class="flex text-[14px] items-center px-4 py-3  text-teal-600 bg-gray-100 hover:bg-gray-100 rounded-lg transition">
                         <i class="fas fa-chart-line mr-3"></i> Dashbord
                     </a>
-                    <a href="http://localhost/tapsocial/settings/" class="flex items-center px-4 py-3 text-gray-600     rounded-lg font-medium">
+                    <a href="http://localhost/tapsocial/settings/" class="flex text-[14px] items-center px-4 py-3 text-gray-600     rounded-lg font-medium">
                         <i class="fas fa-user mr-3"></i> Edit Profile
                     </a>
                 </nav>
@@ -134,9 +141,9 @@ if (empty($userimg)) {
                     <i class="fas fa-bars"></i>
                 </button>
                 <h2 class="text-xl font-medium hidden lg:block text-gray-800">Dashboard</h2>
-                <div class="flex items-center space-x-6">
-                    <div class="px-4 py-2 flex items-center justify-between w-[300px] border border-[#ECECEC] rounded-lg">
-                        <input id="user-link" class="text-[#242424] font-Poppins font-normal text-[14px] leading-[1] tracking-normal flex-1 pr-2" value="<?php echo esc_url( site_url('/dashboard/?user=' . $userinfo->user_login) ); ?>" readonly>
+                <div class="flex items-center space-x-3 lg:space-x-6">
+                    <div class="px-4 py-2 hidden md:flex items-center  justify-between w-[300px] border border-[#ECECEC] rounded-lg">
+                        <input id="user-link" class="text-[#242424]  font-Poppins font-normal text-[14px] leading-[1] tracking-normal flex-1 pr-2" value="<?php echo esc_url( site_url('/dashboard/?user=' . $userinfo->user_login) ); ?>" readonly>
                         <button id="copy-btn" class="font-Poppins bg-[#54B7B4] p-2 rounded-lg text-white font-normal text-[14px] leading-[1] tracking-normal ml-2" type="button">
                             Copy
                         </button>
@@ -176,7 +183,7 @@ if (empty($userimg)) {
             <!-- Scrollable Middle Section (Form & Details) -->
             <main class="flex-1 pt-5 overflow-y-auto lg:pr-96" id="sep-scroll">
                 <div class="">
-                    <div class="grid grid-cols-1 lg:grid-cols-1 pt-3 gap-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-1 pt-[60px]   gap-8">
                         <!-- Left: Form & Details Section -->
                         <div class="lg:col-span-2 space-y-8">
                             <div class="lg:col-span-2 space-y-6 border border-[#ECECEC] px-3 py-3 !bg-[#FAFAFB]">
@@ -189,31 +196,31 @@ if (empty($userimg)) {
                                                 Your bio
                                             </span>
                                         </span>
-                                        <p class="font-poppins font-normal text-[18px] mt-4 leading-[100%] tracking-[0]">
+                                        <p class="font-poppins font-normal text-[15px] mt-4 leading-[100%] tracking-[0]">
                                             <?php echo esc_html($full_name ?: wp_get_current_user()->display_name); ?>
                                             <!-- <?php echo esc_html($tapcode); ?> -->
                                         </p>
                                          
-                                        <div class="lg:flex block md:gap-4  gap-y-5 mt-4">
+                                        <div class="md:flex block md:gap-4  gap-y-5 mt-3">
                                             <?php if ($ext_location): ?>
-                                                <div class="flex items-center space-x-3">
+                                                <div class="flex items-center mt-2 space-x-3">
                                                     <img src="<?php echo get_template_directory_uri(); ?>/assets/img/Location.svg" alt="Location" class="w-[20px]" />
-                                                    <p class="font-poppins font-normal text-[14px] leading-[100%] tracking-[0] text-center">
+                                                    <p class="font-poppins font-normal !mt-0 text-[12px] leading-[100%] tracking-[0] text-center">
                                                         <?php echo esc_html($ext_location); ?>
                                                     </p>
                                                 </div>
                                             <?php endif; ?>
                                             <?php if ($userphone): ?>
-                                                <div class="flex items-center space-x-3">
+                                                <div class="flex items-center mt-2 space-x-3">
                                                     <img src="<?php echo get_template_directory_uri(); ?>/assets/img/Frame.svg" alt="Phone" class="w-[20px]" />
-                                                    <p class="font-poppins font-normal text-[14px] leading-[100%] tracking-[0] text-center">
+                                                    <p class="font-poppins font-normal !mt-0 text-[12px] leading-[100%] tracking-[0] text-center">
                                                         <?php echo esc_html($userphone); ?>
                                                     </p>
                                                 </div>
                                             <?php endif; ?>
-                                            <div class="flex items-center space-x-3">
+                                            <div class="flex items-center mt-2 space-x-3">
                                                 <img src="<?php echo get_template_directory_uri(); ?>/assets/img/Group.svg" alt="Link" class="w-[20px]" />
-                                                <p class="font-poppins font-normal text-[14px] leading-[100%] tracking-[0] text-center truncate max-w-[200px]">
+                                                <p class="font-poppins font-normal  !mt-0 text-[14px] leading-[100%] tracking-[0] text-center truncate max-w-[200px]">
                                                     <?php echo esc_html($username_link); ?>
                                                 </p>
                                             </div>
@@ -225,7 +232,7 @@ if (empty($userimg)) {
                                     <div class="w-full ">
                                          
                                         
-                                        <p class="font-poppins font-normal text-[18px] flex justify-between  leading-[100%] tracking-[0]">
+                                        <p class="font-poppins font-normal text-[15px] flex justify-between  leading-[100%] tracking-[0]">
                                            <span>
  Tappie Passcode:
                                             </span>
@@ -282,11 +289,11 @@ if (empty($userimg)) {
                                                 </span>
                                                 <div class="flex">
                                                     <div class="flex-1 min-w-0">
-                                                        <div class="font-poppins font-normal text-[18px] mt-4 leading-[100%] tracking-[0]">
+                                                        <div class="font-poppins font-normal text-[16px] mt-4 leading-[100%] tracking-[0]">
                                                             <?php echo esc_html($label); ?>
                                                         </div>
                                                         <?php if (($profile['key'] ?? '') !== 'contacts') : ?>
-    <div class="font-poppins font-normal text-[14px] leading-[100%] tracking-[0] text-center pt-5 flex items-center truncate">
+    <div class="font-poppins font-normal text-[12px] leading-[100%] tracking-[0] text-center pt-5 flex items-center truncate">
         <img src="<?php echo get_template_directory_uri(); ?>/assets/img/Icon.png"
              class="h-[15px] w-[15px] me-2"
              alt="">
@@ -392,10 +399,14 @@ if (empty($userimg)) {
                             elseif (!empty($postid) && has_post_thumbnail($postid)) {
                                 $iconUrl = get_the_post_thumbnail_url($postid, 'thumbnail');
                             }
+                                $color = get_user_meta($uid, 'tappie_color', true); // fetch from DB
+$default_color = '#FF8686';
+$style_color = (!empty($color) && preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) ? $color : $default_color;
                         ?>
                             <a href="<?php echo esc_url($username); ?>"
                                target="_blank"
-                               class="flex justify-center items-center  px-8 py-3 bg-[#FF8686] text-white font-medium rounded-[8px] hover:bg-[#54B7B4] <?php echo esc_attr($vcfClass); ?>"
+                                 style="background-color: <?php echo esc_attr($style_color); ?>"
+                               class="flex justify-center items-center  px-8 py-3  text-white font-medium rounded-[8px] hover:bg-[#54B7B4] <?php echo esc_attr($vcfClass); ?>"
                                <?php if (!empty($nameDataValue)): ?>data-userurl="<?php echo esc_attr($nameDataValue); ?>"<?php endif; ?>>
 
                                 <?php if (!empty($iconUrl)): ?>
@@ -496,10 +507,16 @@ if (empty($userimg)) {
                             elseif (!empty($postid) && has_post_thumbnail($postid)) {
                                 $iconUrl = get_the_post_thumbnail_url($postid, 'thumbnail');
                             }
+
+
+                                $color = get_user_meta($uid, 'tappie_color', true); // fetch from DB
+$default_color = '#FF8686';
+$style_color = (!empty($color) && preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) ? $color : $default_color;
                                     ?>
                                        <a href="<?php echo esc_url($username); ?>"
                                target="_blank"
-                               class="flex justify-center items-center  px-8 py-3 bg-[#FF8686] text-white font-medium rounded-[8px] hover:bg-[#54B7B4] <?php echo esc_attr($vcfClass); ?>"
+                                style="background-color: <?php echo esc_attr($style_color); ?>"
+                               class="flex justify-center items-center  px-8 py-3   text-white font-medium rounded-[8px] hover:bg-[#54B7B4] <?php echo esc_attr($vcfClass); ?>"
                                <?php if (!empty($nameDataValue)): ?>data-userurl="<?php echo esc_attr($nameDataValue); ?>"<?php endif; ?>>
 
                                 <?php if (!empty($iconUrl)): ?>
@@ -540,7 +557,7 @@ if (empty($userimg)) {
                  <div class="flex bg-white shadow-sm justify-between p-[10px]">
                     <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.png" 
                      alt="Header" 
-                     class=" " />
+                     class="w-[50px] h-[32px] " />
 
 
                      <?php
@@ -555,7 +572,7 @@ $qrcodeModal  = "https://api.qrserver.com/v1/create-qr-code/?size=280x280&color=
 
 <div class="relative">
     <button type="button" onclick="document.getElementById('profile-qr-modal').classList.remove('hidden')">
-        <img src="<?php echo $qrcodeSmall; ?>" alt="My QR Code" class="h-11 w-11">
+        <img src="<?php echo $qrcodeSmall; ?>" alt="My QR Code" class="w-[32px] h-[32px]">
     </button>
 </div>
 
@@ -716,11 +733,16 @@ $qrcodeModal  = "https://api.qrserver.com/v1/create-qr-code/?size=280x280&color=
                             elseif (!empty($postid) && has_post_thumbnail($postid)) {
                                 $iconUrl = get_the_post_thumbnail_url($postid, 'thumbnail');
                             }
+
+                                // $color = get_user_meta($uid, 'tappie_color', true); // fetch from DB
+$default_color = '#FF8686';
+$style_color = (!empty($color) && preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) ? $color : $default_color;
         ?>
 
             <a href="<?php echo esc_url($username); ?>" 
                target="_blank"
-               class="flex justify-center inline-block px-8 py-3 flex items-center bg-[#FF8686] text-white font-medium rounded-[8px] hover:bg-[#54B7B4] <?php echo esc_attr($vcfClass); ?>" 
+                 style="background-color: <?php echo esc_attr($style_color); ?>"
+               class="flex justify-center inline-block px-8 py-3 flex items-center   text-white font-medium rounded-[8px] hover:bg-[#54B7B4] <?php echo esc_attr($vcfClass); ?>" 
                data-userurl="<?php echo esc_attr($nameDataValue); ?>">
                 <?php if (!empty($iconUrl)) : ?>
                     <img src="<?php echo esc_url($iconUrl); ?>" class="w-5 h-5 object-contain filter grayscale me-2" alt="">

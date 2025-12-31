@@ -71,6 +71,28 @@ wp_enqueue_style(
 }
 add_action('wp_enqueue_scripts', 'theme_scripts', "wp_enqueue_script");
 /////////////////////////
+function tappie_enqueue_vanilla_colorful() {
+    // Change the condition to match your page (e.g., is_page('settings') or similar)
+    if (is_admin()) { // Or use wp_enqueue_scripts and a frontend condition
+        wp_enqueue_script(
+            'vanilla-colorful-hex',
+            'https://cdn.jsdelivr.net/npm/vanilla-colorful@0.7.2/hex-color-picker.js',
+            array(),
+            '0.7.2',
+            true
+        );
+
+        wp_enqueue_style(
+            'vanilla-colorful-css',
+            'https://cdn.jsdelivr.net/npm/vanilla-colorful@0.7.2/styles.css',
+            array(),
+            '0.7.2'
+        );
+    }
+}
+add_action('admin_enqueue_scripts', 'tappie_enqueue_vanilla_colorful'); // Use 'wp_enqueue_scripts' for frontend
+
+/////////////////////
 /**
  * Enqueue scripts and styles.
  */
@@ -1081,7 +1103,7 @@ function tappie_logged_in_redirect() {
 		// exit;
 
 	}else{
-			$protocol = $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
+		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
 			$protocol .= '://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 			$link_array = explode('/',$protocol);
 			$thispage = end($link_array);

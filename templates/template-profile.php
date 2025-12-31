@@ -75,6 +75,26 @@ if (
         "display_name" => $new_full_name,
         "description" => $ubio,
     ]);
+// .....................
+
+if (isset($_POST['tappie_color'])) {
+    $color = trim($_POST['tappie_color']);
+
+    if ($color === '') {
+        // User removed color → delete saved meta
+        delete_user_meta($uid, 'tappie_color');
+    } elseif (preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) {
+        // Valid hex color → save it
+        update_user_meta($uid, 'tappie_color', $color);
+    } else {
+        // Invalid → clean up
+        delete_user_meta($uid, 'tappie_color');
+    }
+}
+
+// ......................
+
+
     if (is_wp_error($update_result)) {
         $update_message =
             '<div class="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-[5px] mb-6">
@@ -119,8 +139,20 @@ if (!is_array($saved_profiles)) {
 
 $full_name = trim($firstname . " " . $lastname);
 $user_email = $userinfo->user_email;
-?>
 
+ 
+?>
+<?php
+ 
+ 
+$colors = get_user_meta($uid, 'tappie_colors', true);
+
+// $saved_color = get_user_meta($uid, 'tappie_color', true);
+// echo '<pre>'; print_r($saved_color); echo '</pre>';
+// echo 'Type: ' . gettype($saved_color);
+// exit;
+?>
+ 
 <section class="bg-gray-50 min-h-screen flex relative">
     <!-- Fixed Left Sidebar -->
     <aside id="sidebar" class="w-64 bg-white border-r border-gray-200 fixed inset-y-0 left-0 z-50 overflow-y-auto transform -translate-x-full md:translate-x-0 transition-transform duration-300">
@@ -150,10 +182,10 @@ $user_email = $userinfo->user_email;
                       <nav class="space-y-1">
                     <a href="<?= esc_url(
                         site_url("/dashboard"),
-                    ) ?>" class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-[5px] transition">
+                    ) ?>" class="flex items-center px-4 py-3 text-[14px] text-gray-600 hover:bg-gray-100 rounded-[5px] transition">
                         <i class="fas fa-chart-line mr-3"></i> Dashbord
                     </a>
-                    <a href="http://localhost/tapsocial/settings/" class="flex items-center px-4 py-3 bg-gray-100 text-teal-600 rounded-[5px] font-medium">
+                    <a href="http://localhost/tapsocial/settings/" class="flex text-[14px] items-center px-4 py-3 bg-gray-100 text-teal-600 rounded-[5px] font-medium">
                         <i class="fas fa-user mr-3"></i> Edit Profile
                     </a>
                 </nav>
@@ -172,62 +204,53 @@ $user_email = $userinfo->user_email;
     <!-- Main Content Wrapper -->
     <div class="flex-1 md:ml-64 flex flex-col relative">
         <!-- Fixed Header -->
-        <header class="bg-white shadow-sm border-b border-gray-200 px-4 md:px-8 py-5 flex items-center justify-between fixed top-0 left-0 right-0 md:left-64 z-40 h-20">
-            <button id="sidebar-toggle" class="md:hidden text-gray-700 text-xl">
-                <i class="fas fa-bars"></i>
-            </button>
-            <h2 class="text-xl font-medium hidden lg:block text-gray-800">Edit Profile</h2>
-            <div class="flex items-center space-x-6">
-                <div class="px-4 py-2 flex items-center justify-between w-[300px] border border-[#ECECEC] rounded-[5px]">
-                    <input id="user-link" class="text-[#242424] font-Poppins font-normal text-[12px] leading-[1] tracking-normal flex-1 pr-2" value="<?php echo esc_url(
-                        site_url("/dashboard/?user=" . $userinfo->user_login),
-                    ); ?>" readonly>
-                    <button id="copy-btn" class="font-Poppins bg-[#54B7B4] p-2 rounded-[5px] text-white font-normal text-[12px] leading-[1] tracking-normal ml-2" type="button">
-                        Copy
-                    </button>
-                </div>
-                <?php if (is_user_logged_in()) {
-
-                    $profile_url =
-                        "https://tapsocial/" . esc_attr($userinfo->user_login);
-                    $qrcodeSmall =
-                        "https://api.qrserver.com/v1/create-qr-code/?size=120x120&color=000000&data=" .
-                        urlencode($profile_url);
-                    $qrcodeModal =
-                        "https://api.qrserver.com/v1/create-qr-code/?size=280x280&color=000000&data=" .
-                        urlencode($profile_url);
+          <header class="bg-white shadow-sm border-b border-gray-200 px-4 md:px-8 py-5 flex items-center justify-between fixed top-0 left-0 right-0 md:left-64 z-40 h-20">
+                <button id="sidebar-toggle" class="md:hidden text-gray-700 text-xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h2 class="text-xl font-medium hidden lg:block text-gray-800">Edit Profile</h2>
+                <div class="flex items-center space-x-3 lg:space-x-6">
+                    <div class="px-4 py-2 hidden md:flex items-center  justify-between w-[300px] border border-[#ECECEC] rounded-lg">
+                        <input id="user-link" class="text-[#242424]  font-Poppins font-normal text-[14px] leading-[1] tracking-normal flex-1 pr-2" value="<?php echo esc_url( site_url('/dashboard/?user=' . $userinfo->user_login) ); ?>" readonly>
+                        <button id="copy-btn" class="font-Poppins bg-[#54B7B4] p-2 rounded-lg text-white font-normal text-[14px] leading-[1] tracking-normal ml-2" type="button">
+                            Copy
+                        </button>
+                    </div>
+                    <?php if (is_user_logged_in()) {
+                        $profile_url = 'https://tapsocial/' . esc_attr($userinfo->user_login);
+                        $qrcodeSmall = "https://api.qrserver.com/v1/create-qr-code/?size=120x120&color=000000&data=" . urlencode($profile_url);
+                        $qrcodeModal = "https://api.qrserver.com/v1/create-qr-code/?size=280x280&color=000000&data=" . urlencode($profile_url);
                     ?>
-                <div class="relative">
-                    <button type="button" onclick="document.getElementById('profile-qr-modal').classList.remove('hidden')">
-                        <img src="<?php echo $qrcodeSmall; ?>" alt="My QR Code" class="h-11 w-11">
-                    </button>
-                </div>
-                <div id="profile-qr-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4 bg-black bg-opacity-50">
-                    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xs overflow-hidden">
-                        <div class="bg-gradient-to-r from-[#54B7B4] to-teal-600 py-4 text-center relative">
-                            <h4 class="text-xl font-bold text-white">My Tappie QR Code</h4>
-                            <p class="text-white text-sm mt-1 opacity-90">Scan to view my public profile</p>
-                            <button type="button" onclick="document.getElementById('profile-qr-modal').classList.add('hidden')" class="absolute top-3 right-4 text-white text-2xl hover:opacity-80">&times;</button>
-                        </div>
-                        <div class="p-6 bg-gray-50 text-center">
-                            <div class="bg-white p-6 rounded-xl shadow-inner inline-block">
-                                <img src="<?php echo $qrcodeModal; ?>" alt="QR Code" class="w-64 h-64 mx-auto">
+                    <div class="relative">
+                        <button type="button" onclick="document.getElementById('profile-qr-modal').classList.remove('hidden')">
+                            <img src="<?php echo $qrcodeSmall; ?>" alt="My QR Code" class="h-11 w-11 ">
+                        </button>
+                    </div>
+                    <div id="profile-qr-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center px-4 bg-black bg-opacity-50">
+                        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xs overflow-hidden">
+                            <div class="bg-gradient-to-r from-[#54B7B4] to-teal-600 py-4 text-center relative">
+                                <h4 class="text-xl font-bold text-white">My Tappie QR Code</h4>
+                                <p class="text-white text-sm mt-1 opacity-90">Scan to view my public profile</p>
+                                <button type="button" onclick="document.getElementById('profile-qr-modal').classList.add('hidden')" class="absolute top-3 right-4 text-white text-2xl hover:opacity-80">&times;</button>
+                            </div>
+                            <div class="p-6 bg-gray-50 text-center">
+                                <div class="bg-white p-6 rounded-xl shadow-inner inline-block">
+                                    <img src="<?php echo $qrcodeModal; ?>" alt="QR Code" class="w-64 h-64 mx-auto">
+                                </div>
+                            </div>
+                            <div class="py-3 bg-gray-100 text-center">
+                                <button type="button" onclick="document.getElementById('profile-qr-modal').classList.add('hidden')" class="text-[#54B7B4] font-medium text-sm hover:underline">
+                                    Close
+                                </button>
                             </div>
                         </div>
-                        <div class="py-3 bg-gray-100 text-center">
-                            <button type="button" onclick="document.getElementById('profile-qr-modal').classList.add('hidden')" class="text-[#54B7B4] font-medium text-sm hover:underline">
-                                Close
-                            </button>
-                        </div>
                     </div>
+                    <?php } ?>
                 </div>
-                <?php
-                } ?>
-            </div>
-        </header>
+            </header>
 
         <!-- Scrollable Form Section -->
-        <main class="flex-1 pt-10 overflow-y-auto lg:pr-96" id="sep-scroll">
+        <main class="flex-1 pt-[5.5rem] lg:pt-10 overflow-y-auto lg:pr-96" id="sep-scroll">
             <div class="px-3 md:p-[1px]">
                 <div class=" rounded-[5px]  p-[10px]">
                     <div class="flex items-center space-x-3 mb-4">
@@ -278,6 +301,7 @@ $user_email = $userinfo->user_email;
                                 ); ?>" class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-[5px] focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="City, Country">
                             </div>
                         </div>
+ 
                         <div class="mb-8">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
                             <div class="relative">
@@ -415,7 +439,7 @@ $user_email = $userinfo->user_email;
                         <?php endif; ?>
                     </div>
                     <div class="flex-1 min-w-0">
-                        <div class="font-medium truncate">
+                        <div class="font-medium text-[14px] truncate">
                             <?php echo esc_html($label); ?>
                             <?php if ($isContact): ?>
                                 <span class="text-xs text-gray-500 ml-2">(VCF)</span>
@@ -472,9 +496,49 @@ $user_email = $userinfo->user_email;
                                             ); ?>">
                                                       </div>
                                                     <?php
+                                                   
                                                    endforeach; ?>
          </div>
             </div>
+            
+     <?php 
+$uid = get_current_user_id();
+$color = get_user_meta($uid, 'tappie_color', true);
+$default_color = '#FF8686'; // your default color
+$color = !empty($color) ? $color : $default_color;
+?>
+
+<!-- ///////////////// -->
+<div class="mb-8 flex items-center">
+    <label class="block text-sm font-medium w-[40%] text-gray-700 me-3">
+        Public Profile Theme Color:
+    </label>
+
+    <div class="relative w-full">
+        <!-- Hidden color input for picker (off-screen) -->
+        <input type="color" id="hidden-color-picker"
+               style="opacity: 0; width: 1px; height: 1px; position: absolute;"
+               value="<?php echo esc_attr($color); ?>">
+
+        <input type="text"
+               id="color-text-input"
+               class="w-full pl-12 pr-3 py-2 border border-gray-300 rounded-[5px] focus:outline-none focus:ring-2 focus:ring-teal-500"
+               value="<?php echo esc_attr($color); ?>"
+               placeholder="#ffffff">
+
+        <span id="color-circle"
+              class="absolute left-2 top-1/2 transform -translate-y-1/2 w-8 h-8 rounded-full border cursor-pointer"
+              style="background-color: <?php echo esc_attr($color); ?>;">
+        </span>
+    </div>
+
+    <!-- Hidden input for form submission -->
+    <input type="hidden" id="tappie-color-hidden"
+           name="tappie_color"
+           value="<?php echo esc_attr($color); ?>">
+</div>
+<!-- //////////////////// -->
+
                         <button type="submit" class=" items-center px-5 py-2.5 bg-[#54B7B4]  justify-center text-white text-sm font-medium rounded-[5px] transition shadow-sm">Update Profile</button>
                     </form>
                 </div>
@@ -578,9 +642,10 @@ $user_email = $userinfo->user_email;
                                            <?php if (
                                                !empty($saved_profiles)
                                            ): ?>
-                        <div class="grid grid-cols-2 gap-4 max-w-xs mx-auto">
+                        <div class="grid grid-cols-2 mt-2 gap-4 max-w-xs mx-auto">
                                     <?php foreach ($saved_profiles as $profile):
-
+// print_r($color);
+//                             exit();
                                         $username = $profile["url"] ?? "#";
                                         $label =
                                             $profile["label"] ??
@@ -611,7 +676,8 @@ $user_email = $userinfo->user_email;
                                                 $userinfo->user_login;
                                         }
                                         // Default icon
-                            
+                            // print_r($color);
+                            // exit();
 
                             // Special handling for contacts (vCard)
                             if (($profile['key'] ?? '') === 'contacts') {
@@ -626,11 +692,15 @@ $user_email = $userinfo->user_email;
                             elseif (!empty($postid) && has_post_thumbnail($postid)) {
                                 $iconUrl = get_the_post_thumbnail_url($postid, 'thumbnail');
                             }
+                             $color = get_user_meta($uid, 'tappie_color', true); // fetch from DB
+$default_color = '#FF8686';
+$style_color = (!empty($color) && preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) ? $color : $default_color;
                                         ?>
                                         
                                         <a href="<?php echo esc_url($full_url); ?>"
                                target="_blank"
-                               class="flex justify-center items-center mt-2  px-8 py-3 bg-[#FF8686] text-white font-medium rounded-[8px] hover:bg-[#54B7B4] <?php echo esc_attr($vcfClass); ?>"
+                               style="background-color: <?php echo esc_attr($style_color); ?>"
+                               class="flex justify-center items-center  px-8 py-3  text-white font-medium rounded-[8px] hover:bg-[#54B7B4] <?php echo esc_attr($vcfClass); ?>"
                                <?php if (!empty($nameDataValue)): ?>data-userurl="<?php echo esc_attr($nameDataValue); ?>"<?php endif; ?>>
 
                                 <?php if (!empty($iconUrl)): ?>
@@ -767,3 +837,5 @@ $user_email = $userinfo->user_email;
 <!-- <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script> -->
  
 <?php get_footer(); ?>
+
+

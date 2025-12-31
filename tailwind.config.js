@@ -18,7 +18,7 @@ module.exports = {
                         fontFamily: {
                             poppins: ["Poppins", "sans-serif"],
                         
-        syne: ['Syne', 'sans-serif'],
+        syne: ['Syne'],
     
                         },
                         fontFamily: {
