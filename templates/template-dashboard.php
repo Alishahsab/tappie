@@ -399,9 +399,17 @@ if (empty($userimg)) {
                             elseif (!empty($postid) && has_post_thumbnail($postid)) {
                                 $iconUrl = get_the_post_thumbnail_url($postid, 'thumbnail');
                             }
-                                $color = get_user_meta($uid, 'tappie_color', true); // fetch from DB
-$default_color = '#FF8686';
-$style_color = (!empty($color) && preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) ? $color : $default_color;
+                            
+   $color = get_user_meta($uid, 'tappie_bg_color', true); // fetch from DB
+                                 $colortext = get_user_meta($uid, 'tappie_text_color', true); // fetch from DB
+                                $default_color = '#FF8686';
+                                $style_color = (!empty($color) && preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) ? $color : $default_color;
+
+
+                            $default_colortext = '#FFFFFF';
+                            $style_colortext = (!empty($colortext) && preg_match('/^#[0-9A-Fa-f]{6}$/', $colortext)) ? $colortext : $default_color;
+
+
                         ?>
                             <a href="<?php echo esc_url($username); ?>"
                                target="_blank"
@@ -415,7 +423,7 @@ $style_color = (!empty($color) && preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) ? $
                                          alt="<?php echo esc_attr($label); ?> icon">
                                 <?php endif; ?>
 
-                                <span class="text-[14px]"><?php echo esc_html($label); ?></span>
+                                <span  style="color: <?php echo esc_attr($style_colortext); ?>" class="text-[14px]"><?php echo esc_html($label); ?></span>
                             </a>
                         <?php endforeach; ?>
                     </div>
@@ -456,6 +464,11 @@ $style_color = (!empty($color) && preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) ? $
                                              $limit = 120;
                                              $needs_read_more = mb_strlen($bio) > $limit;
                                              $short_bio = mb_substr($bio, 0, $limit);
+
+
+
+
+                                             
                                              ?>
            
                                              <div class="text-gray-600 text-[14px] mt-2 bio-container">
@@ -509,9 +522,16 @@ $style_color = (!empty($color) && preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) ? $
                             }
 
 
-                                $color = get_user_meta($uid, 'tappie_color', true); // fetch from DB
-$default_color = '#FF8686';
-$style_color = (!empty($color) && preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) ? $color : $default_color;
+   $color = get_user_meta($uid, 'tappie_bg_color', true); // fetch from DB
+                                 $colortext = get_user_meta($uid, 'tappie_text_color', true); // fetch from DB
+                                $default_color = '#FF8686';
+                                $style_color = (!empty($color) && preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) ? $color : $default_color;
+
+
+                            $default_colortext = '#FFFFFF';
+                            $style_colortext = (!empty($colortext) && preg_match('/^#[0-9A-Fa-f]{6}$/', $colortext)) ? $colortext : $default_color;
+
+
                                     ?>
                                        <a href="<?php echo esc_url($username); ?>"
                                target="_blank"
@@ -525,7 +545,7 @@ $style_color = (!empty($color) && preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) ? $
                                          alt="<?php echo esc_attr($label); ?> icon">
                                 <?php endif; ?>
 
-                                <span class="text-[14px]"><?php echo esc_html($label); ?></span>
+                                <span  style="color: <?php echo esc_attr($style_colortext); ?>" class="text-[14px]"><?php echo esc_html($label); ?></span>
                             </a>
                                     <?php endforeach; ?>
                                 </div>
@@ -734,9 +754,16 @@ $qrcodeModal  = "https://api.qrserver.com/v1/create-qr-code/?size=280x280&color=
                                 $iconUrl = get_the_post_thumbnail_url($postid, 'thumbnail');
                             }
 
-                                // $color = get_user_meta($uid, 'tappie_color', true); // fetch from DB
-$default_color = '#FF8686';
-$style_color = (!empty($color) && preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) ? $color : $default_color;
+        $color = get_user_meta($userID, 'tappie_bg_color', true); // fetch from DB
+                                 $colortext = get_user_meta($userID, 'tappie_text_color', true); // fetch from DB
+                                $default_color = '#FF8686';
+                                $style_color = (!empty($color) && preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) ? $color : $default_color;
+
+
+                            $default_colortext = '#FFFFFF';
+                            $style_colortext = (!empty($colortext) && preg_match('/^#[0-9A-Fa-f]{6}$/', $colortext)) ? $colortext : $default_color;
+
+
         ?>
 
             <a href="<?php echo esc_url($username); ?>" 
@@ -749,7 +776,7 @@ $style_color = (!empty($color) && preg_match('/^#[0-9A-Fa-f]{6}$/', $color)) ? $
                 <?php else : ?>
                     <i class="fas fa-link me-2"></i>
                 <?php endif; ?>
-                <span class="text-sm font-medium"><?php echo esc_html($label); ?></span>
+                <span  style="color: <?php echo esc_attr($style_colortext); ?>" class="text-sm font-medium"><?php echo esc_html($label); ?></span>
             </a>
         <?php endforeach; ?>
     </div>
