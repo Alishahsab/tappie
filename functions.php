@@ -452,100 +452,80 @@ function tappie_login_function(){
 /*user login submit*/
 add_action( 'wp_ajax_tappie_registeration_function', 'wp_ajax_tappie_registeration_function' );
 add_action( 'wp_ajax_nopriv_wp_ajax_tappie_registeration_function', 'wp_ajax_tappie_registeration_function' );
+
 function wp_ajax_tappie_registeration_function(){
- 
 
-	$returnArray = array();
-	$un = $_POST['un'];
-	$uemail = $_POST['uemail'];
-	$up = $_POST['up'];
-	
+    $un     = $_POST['un'];
+    $uemail = $_POST['uemail'];
+    $up     = $_POST['up'];
 
-	if ( preg_match('/\s/',$un) ) { 
-		$returnArray = array(
-			'error' => true,
-			'msg' => 'Error! Profile name has space',
-		);
-		exit(json_encode($returnArray));
-	}
+    // Username has space
+    if ( preg_match('/\s/', $un) ) {
+        exit(json_encode([
+            'error' => true,
+            'msg'   => 'Error! Profile name has space',
+            'field' => 'un'
+        ]));
+    }
 
-	$user_id = username_exists( $un );
-	 
-	if ( ! $user_id && false == email_exists( $uemail ) ) {
-	    $random_password = $up;
-	    $user_id = wp_create_user( $un, $random_password, $uemail );
+    // Username exists
+    if ( username_exists($un) ) {
+        exit(json_encode([
+            'error' => true,
+            'msg'   => 'Error! User already exists',
+            'field' => 'un'
+        ]));
+    }
 
+    // Email exists
+    if ( email_exists($uemail) ) {
+        exit(json_encode([
+            'error' => true,
+            'msg'   => 'Error! Email already exists',
+            'field' => 'uemail'
+        ]));
+    }
 
+    // Create user
+    $user_id = wp_create_user($un, $up, $uemail);
 
-	    if(is_wp_error($user_id)){
-		    $returnArray = array(
-		    	'error' => true,
-		    	'msg' => 'Error! Please try again',
-		    );
-		}else{
+    if ( is_wp_error($user_id) ) {
+        exit(json_encode([
+            'error' => true,
+            'msg'   => 'Error! Please try again'
+        ]));
+    }
 
+    // Auto login
+    $credentials = [
+        'user_login'    => $un,
+        'user_password' => $up,
+        'remember'      => true
+    ];
 
-			$credentials = array(
-			        'user_login' => $un,
-			        'user_password' => $up,
-			        'rememberme' => true
-			    );
+    $signon = wp_signon($credentials, is_ssl() ? false : true);
 
-			if(is_ssl() || isLocalhost()){
-				$signon = wp_signon($credentials, false); 
-			}else{
-				$signon = wp_signon($credentials, true); // true - use HTTP only cookie
-			}
+    if ( is_wp_error($signon) ) {
+        exit(json_encode([
+            'error' => true,
+            'msg'   => 'Registered but login failed'
+        ]));
+    }
 
-			if(is_wp_error($signon)){
-				$returnArray = array(
-					'error' => true,
-					'msg' => 'Error! Registered but error in login',
-				);
-			}
-			else{
+    $uid = $signon->ID;
 
-				
-				$uid = $signon->ID;
-					     	$unaem = $signon->user_login;
+    wp_set_current_user($uid);
+    wp_set_auth_cookie($uid);
 
-					     	wp_set_current_user($uid);
-					     	wp_set_auth_cookie($uid);
+    update_user_meta($uid, 'passcodes', $up);
 
-					     	update_user_meta($uid, 'passcodes', $up);
+    $dashboardURL = site_url('/add-passcode');
 
-					     	$dashboardURL = site_url().'/dashboard';
-					     	$dashboardURL = add_query_arg( array(
-					     		'user'=> $unaem
-					     	), $dashboardURL);
-					     	update_option($up, $dashboardURL);
-
-
-					     	// overwriting
-					     	
-					     	$dashboardURL = site_url().'/add-passcode';
-					     	
-
-
-				$returnArray = array(
-					'error' => false,
-					'msg' => 'Success! Please wait while redirecting...',
-					'url' => $dashboardURL,
-				);
-			}
-			
-		}
-
-	} else {
-	    $returnArray = array(
-	    		    	'error' => true,
-	    		    	'msg' => 'Error! User already exists',
-	    		    );
-	}
-	
-	
-	
-	exit(json_encode($returnArray));
+    exit(json_encode([
+        'error' => false,
+        'msg'   => 'Success! Please wait while redirecting...',
+        'url'   => $dashboardURL
+    ]));
 }
 
 
@@ -915,9 +895,10 @@ function tappie_update_password_in_db(){
 		wp_set_password( $pw, $user_id );
 
 		$returnArray = array(
-			'error' => false,
-			'msg' => 'Success! Password has been changed, <a href="'.site_url().'">Click here</a> to login',
-			);
+    'error' => false,
+    'msg' => 'Success! Password has been changed, <a href="' . site_url() . '" class="text-primary font-medium loginnow">Click here</a> to login',
+);
+
 	}else{
 		$returnArray = array(
 			'error' => true,

@@ -356,48 +356,110 @@ jQuery(document).ready(function(){
 
 		/*ajax call on user resigertaion*/
 
-		jQuery('.tappie-signupscreen').on('submit', function(e){
+		// jQuery('.tappie-signupscreen').on('submit', function(e){
 
-				jQuery('.tappieloading, .bodyoverlay').show();
+		// 		jQuery('.tappieloading, .bodyoverlay').show();
 
-				$un = jQuery(this).find('input[name="un"]').val();
-				$up = jQuery(this).find('input[name="up"]').val();
-				$uemail = jQuery(this).find('input[name="uemail"]').val();
+		// 		$un = jQuery(this).find('input[name="un"]').val();
+		// 		$up = jQuery(this).find('input[name="up"]').val();
+		// 		$uemail = jQuery(this).find('input[name="uemail"]').val();
 
-				jQuery(this).find('.alert').html('');
-				jQuery(this).find('.alert').addClass('hiddenbtn');
+		// 		jQuery(this).find('.alert').html('');
+		// 		jQuery(this).find('.alert').addClass('hiddenbtn');
 
-				$this = jQuery(this);
+		// 		$this = jQuery(this);
 
-				/*ajax*/
-				jQuery.ajax({
-				            url : ajaxURL.ajaxurl,
-				            type : 'POST',
-				            dataType: "json",
-				            data : {
-				                action : 'wp_ajax_tappie_registeration_function',
-				                un : $un,
-				                uemail : $uemail,
-				                up : $up
-				            },
-				            success : function( response ) {
-				                jQuery('.tappieloading, .bodyoverlay').hide();
+		// 		/*ajax*/
+		// 		jQuery.ajax({
+		// 		            url : ajaxURL.ajaxurl,
+		// 		            type : 'POST',
+		// 		            dataType: "json",
+		// 		            data : {
+		// 		                action : 'wp_ajax_tappie_registeration_function',
+		// 		                un : $un,
+		// 		                uemail : $uemail,
+		// 		                up : $up
+		// 		            },
+		// 		            success : function( response ) {
+		// 		                jQuery('.tappieloading, .bodyoverlay').hide();
 
-				                if (response.error===true) {
-				                	$this.find('.alert.alert-danger').html(response.msg);
-				                	$this.find('.alert.alert-danger').removeClass('hiddenbtn');
-				                }else{
-				                	$this.find('.alert.alert-success').html(response.msg);
-				                	$this.find('.alert.alert-success').removeClass('hiddenbtn');
-				                	window.location.replace(response.url);
-				                }
+		// 		                if (response.error===true) {
+		// 		                	$this.find('.alert.alert-danger').html(response.msg);
+		// 		                	$this.find('.alert.alert-danger').removeClass('hiddenbtn');
+		// 		                }else{
+		// 		                	$this.find('.alert.alert-success').html(response.msg);
+		// 		                	$this.find('.alert.alert-success').removeClass('hiddenbtn');
+		// 		                	window.location.replace(response.url);
+		// 		                }
 
-				            }
-				        });
+		// 		            }
+		// 		        });
 				
-				e.preventDefault();
+		// 		e.preventDefault();
 				
-		});
+		// });
+jQuery(document).ready(function($){
+
+    $('.tappie-signupscreen').on('submit', function(e){
+        e.preventDefault();
+
+        $('.tappieloading, .bodyoverlay').show();
+
+        var $this   = $(this);
+        var un      = $this.find('input[name="un"]').val();
+        var up      = $this.find('input[name="up"]').val();
+        var uemail  = $this.find('input[name="uemail"]').val();
+
+        // Reset errors
+        $this.find('.alert').html('').addClass('hiddenbtn');
+        $this.find('input').removeClass('error-field');
+
+        $.ajax({
+            url: ajaxURL.ajaxurl,
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                action : 'wp_ajax_tappie_registeration_function',
+                un     : un,
+                up     : up,
+                uemail : uemail
+            },
+            success: function(response){
+
+                $('.tappieloading, .bodyoverlay').hide();
+
+                if (response.error === true) {
+
+                    $this.find('.alert.alert-danger')
+                        .html(response.msg)
+                        .removeClass('hiddenbtn');
+
+                    if (response.field) {
+                        $this.find('input[name="'+response.field+'"]')
+                            .addClass('error-field');
+                    }
+
+                } else {
+
+                    $this.find('.alert.alert-success')
+                        .html(response.msg)
+                        .removeClass('hiddenbtn');
+
+                    window.location.replace(response.url);
+                }
+            }
+        });
+
+    });
+
+});
+jQuery(document).on('input change', '.tappie-signupscreen input', function () {
+    jQuery(this).removeClass('error-field');
+    jQuery(this).closest('form')
+        .find('.alert.alert-danger')
+        .addClass('hiddenbtn')
+        .html('');
+});
 
 
 		

@@ -3,9 +3,33 @@
 	padding:0;
 }
 
-body, html{
-
+/* Loader hidden by default */
+.bodyoverlay,
+.tappieloading {
+    display: none;
 }
+
+.bodyoverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 9998;
+}
+
+.tappieloading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+
+/* Validation */
+.error-field{
+    border: 1px solid #e53935 !important;
+    background-color: #fff5f5;
+}
+
 body{
     font-family: 'Poppins', sans-serif !important;
 }

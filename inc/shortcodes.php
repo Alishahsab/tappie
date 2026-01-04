@@ -111,18 +111,26 @@ function tappie_register_login_shortcode() {
 
     // === Your existing HTML design (unchanged) ===
 ?>
-<div class="w-full min-h-screen relative flex items-center justify-center bg-bgLight">
+<div 
+ style="background-image: url('<?php echo get_template_directory_uri(); ?>/assets/img/main-bg.png');"
+class="w-full min-h-screen relative flex items-center justify-center bg-center bg-cover !bg-[#F3FBFA]">
     <!-- Decorative images -->
     <img src="<?php echo get_template_directory_uri(); ?>/assets/img/loudspeker.png" class="absolute bottom-0 lg:w-[246.22px] left-10 w-12 sm:w-[15%]" alt="loudspeaker">
     <img src="<?php echo get_template_directory_uri(); ?>/assets/img/Frame 2661.png" class="absolute bottom-0 lg:w-[142.35px] left-1/2 -translate-x-1/2 w-24 sm:w-[15%]" alt="frame">
     <img src="<?php echo get_template_directory_uri(); ?>/assets/img/Like.png" class="absolute w-16 sm:w-[15%] lg:w-[200px] bottom-0 right-10" alt="like">
 
-    <div class="w-full flex justify-center items-center bg-[url('<?php echo get_template_directory_uri(); ?>/assets/img/main-bg.png')] bg-center bg-cover">
+    <div 
+  class="w-full flex justify-center items-center bg-center bg-cover"
+   
+>
+
         <div class="py-20 flex justify-center w-full px-[15px] lg:px-4">
             <div class="w-full max-w-[500px]">
                 <!-- Logo -->
                 <div class="mb-6 flex justify-center items-center w-full absolute top-5 left-0">
                     <img src="<?php echo get_template_directory_uri(); ?>/assets/img/logo.png" alt="Tappie Logo" class="w-32 sm:w-40" />
+                                        <!-- <img src="<?php echo get_template_directory_uri(); ?>/assets/img/main-bg.png" alt="Tappie Logo" class="w-32 sm:w-40" /> -->
+
                 </div>
 
                 <!-- Card -->
@@ -236,8 +244,8 @@ function tappie_register_login_shortcode() {
                                 Log In
                             </button>
 
-                            <div class="alert alert-success hiddenbtn" role="alert"></div>
-                            <div class="alert alert-danger hiddenbtn" role="alert"></div>
+                            <div class="alert alert-success !text-primary hiddenbtn" role="alert"></div>
+                            <div class="alert alert-danger !text-[#e53935] hiddenbtn" role="alert"></div>
                         </form>
 
                         <p class="text-center text-muted text-[12px] sm:text-[14px] mt-4">
@@ -315,8 +323,8 @@ function tappie_register_login_shortcode() {
                                 Sign Up
                             </button>
 
-                            <div class="alert alert-success hiddenbtn" role="alert"></div>
-                            <div class="alert alert-danger hiddenbtn" role="alert"></div>
+                            <div class="alert alert-success !text-primary hiddenbtn" role="alert"></div>
+                            <div class="alert alert-danger !text-[#e53935] hiddenbtn" role="alert"></div>
 
                             <p class="text-center text-muted text-[12px] sm:text-[14px] mt-4">
                                 By registering, you agree to our <a href="#" class="text-primary">Terms</a> and <a href="#" class="text-primary">Privacy policy</a>

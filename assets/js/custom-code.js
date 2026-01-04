@@ -583,58 +583,7 @@ document.addEventListener("click", function (e) {
     }
 });
 ///////////////////colorpicker/////////////
-// document.addEventListener('DOMContentLoaded', () => {
-//     const picker = document.getElementById('hidden-color-picker'); // hidden color picker
-//     const colorInput = document.getElementById('color-text-input'); // text input
-//     const colorCircle = document.getElementById('color-circle'); // circular swatch
-//     const hiddenInput = document.getElementById('tappie-color-hidden'); // hidden input for form
-
-//     const DEFAULT_COLOR = '#000000';
-
-//     // Apply color to UI
-//     function applyColor(color) {
-//         colorCircle.style.backgroundColor = color;
-//         colorInput.value = color;
-//         hiddenInput.value = color;
-//     }
-
-//     // Reset color
-//     function resetColor() {
-//         colorCircle.style.backgroundColor = '';
-//         colorInput.value = '';
-//         hiddenInput.value = '';
-//     }
-
-//     // Initialize from saved value
-//     const savedColor = hiddenInput.value.trim();
-//     if (savedColor && /^#[0-9A-Fa-f]{6}$/.test(savedColor)) {
-//         applyColor(savedColor);
-//     } else {
-//         resetColor();
-//     }
-
-//     // Click circle → open hidden color picker
-//     colorCircle.addEventListener('click', () => {
-//         picker.click();
-//     });
-
-//     // When color picker changes
-//     picker.addEventListener('input', (e) => {
-//         applyColor(e.target.value);
-//     });
-
-//     // When user types manually
-//     colorInput.addEventListener('input', (e) => {
-//         const val = e.target.value;
-//         if (/^#[0-9A-Fa-f]{0,6}$/.test(val)) {
-//             colorCircle.style.backgroundColor = val;
-//             hiddenInput.value = val;
-//         }
-//     });
-// });
-// colorCircle.addEventListener('click', () => {
-//     picker.click(); // now the picker will open
-// });
+ 
 ///////////////////textcolor////////////picker/////
  document.addEventListener('DOMContentLoaded', () => {
 
@@ -678,3 +627,5 @@ document.addEventListener("click", function (e) {
     setupColorPicker('text-color-circle', 'text-color-text-input', 'hidden-text-color-picker', 'tappie-text-color-hidden', '#000000');
 
 });
+///////////////////signup///////////////
+ 
